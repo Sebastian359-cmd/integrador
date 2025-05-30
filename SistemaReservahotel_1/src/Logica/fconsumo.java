@@ -11,10 +11,6 @@ import java.sql.Statement;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author CARLOS
- */
 public class fconsumo {
     
    private conexion mysql=new conexion();
