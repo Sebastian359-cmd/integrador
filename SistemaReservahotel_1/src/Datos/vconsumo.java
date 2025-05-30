@@ -1,10 +1,7 @@
 
 package Datos;
 
-/**
- *
- * @author CARLOS
- */
+
 public class vconsumo {
     private int idconsumo;
     private int idreserva;
