@@ -6,10 +6,6 @@
 
 package Datos;
 
-/**
- *
- * @author CARLOS
- */
 public class vcliente extends vpersona{
     private String codigo_cliente;
 
