@@ -3,10 +3,6 @@ package Datos;
 
 import java.sql.Date;
 
-/**
- *
- * @author CARLOS
- */
 public class vpago {
     private int idpago;
     private int idreserva;
