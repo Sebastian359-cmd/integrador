@@ -6,10 +6,6 @@
 
 package Datos;
 
-/**
- *
- * @author CARLOS
- */
 public class vpersona {
     private int idpersona;
     private String nombre;
