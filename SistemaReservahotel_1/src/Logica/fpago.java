@@ -1,5 +1,3 @@
-
-
 package Logica;
 
 import Datos.vpago;
