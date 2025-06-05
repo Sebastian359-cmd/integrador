@@ -1,21 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Logica;
 
 import Datos.vcliente;
-import Datos.vproducto;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class fcliente {
 
+    private static final Logger logger = LoggerFactory.getLogger(fcliente.class);
     private conexion mysql = new conexion();
     private Connection cn = mysql.conectar();
     private String sSQL = "";
@@ -28,14 +24,14 @@ public class fcliente {
         String[] titulos = {"ID", "Nombre", "Apaterno", "Amaterno", "Doc", "Númeo Documento", "Dirección", "Teléfono", "Email", "Código"};
 
         String[] registro = new String[10];
-
         totalregistros = 0;
         modelo = new DefaultTableModel(null, titulos);
 
-        sSQL = "select p.idpersona,p.nombre,p.apaterno,p.amaterno,p.tipo_documento,p.num_documento,"
-                + "p.direccion,p.telefono,p.email,c.codigo_cliente from persona p inner join cliente c "
-                + "on p.idpersona=c.idpersona where num_documento like '%"
-                + buscar + "%' order by idpersona desc";
+        sSQL = "SELECT p.idpersona, p.nombre, p.apaterno, p.amaterno, p.tipo_documento, p.num_documento,"
+             + " p.direccion, p.telefono, p.email, c.codigo_cliente"
+             + " FROM persona p INNER JOIN cliente c ON p.idpersona = c.idpersona"
+             + " WHERE num_documento LIKE '%" + buscar + "%'"
+             + " ORDER BY idpersona DESC";
 
         try {
             Statement st = cn.createStatement();
@@ -53,61 +49,54 @@ public class fcliente {
                 registro[8] = rs.getString("email");
                 registro[9] = rs.getString("codigo_cliente");
 
-                totalregistros = totalregistros + 1;
+                totalregistros++;
                 modelo.addRow(registro);
-
             }
             return modelo;
 
         } catch (Exception e) {
-            JOptionPane.showConfirmDialog(null, e);
+            logger.error("Error al mostrar clientes con filtro '{}'", buscar, e);
             return null;
         }
-
     }
 
-    public boolean insertar(vcliente dts) {
-        sSQL = "insert into persona (nombre,apaterno,amaterno,tipo_documento,num_documento,direccion,telefono,email)"
-                + "values (?,?,?,?,?,?,?,?)";
-        sSQL2 = "insert into cliente (idpersona,codigo_cliente)"
-                + "values ((select idpersona from persona order by idpersona desc limit 1),?)";
-        try {
 
-            PreparedStatement pst = cn.prepareStatement(sSQL);
-            PreparedStatement pst2 = cn.prepareStatement(sSQL2);
+  public boolean insertar(vcliente dts) {
+    sSQL = "insert into persona (nombre,apaterno,amaterno,tipo_documento,num_documento,direccion,telefono,email)"
+            + " values (?,?,?,?,?,?,?,?)";
+    sSQL2 = "insert into cliente (idpersona,codigo_cliente)"
+            + " values ((select idpersona from persona order by idpersona desc limit 1),?)";
 
-            pst.setString(1, dts.getNombre());
-            pst.setString(2, dts.getApaterno());
-            pst.setString(3, dts.getAmaterno());
-            pst.setString(4, dts.getTipo_documento());
-            pst.setString(5, dts.getNum_documento());
-            pst.setString(6, dts.getDireccion());
-            pst.setString(7, dts.getTelefono());
-            pst.setString(8, dts.getEmail());
+    try {
+        PreparedStatement pst = cn.prepareStatement(sSQL);
+        PreparedStatement pst2 = cn.prepareStatement(sSQL2);
 
-            pst2.setString(1, dts.getCodigo_cliente());
+        pst.setString(1, dts.getNombre());
+        pst.setString(2, dts.getApaterno());
+        pst.setString(3, dts.getAmaterno());
+        pst.setString(4, dts.getTipo_documento());
+        pst.setString(5, dts.getNum_documento());
+        pst.setString(6, dts.getDireccion());
+        pst.setString(7, dts.getTelefono());
+        pst.setString(8, dts.getEmail());
 
-            int n = pst.executeUpdate();
+        pst2.setString(1, dts.getCodigo_cliente());
 
-            if (n != 0) {
-                int n2 = pst2.executeUpdate();
+        int n = pst.executeUpdate();
 
-                if (n2 != 0) {
-                    return true;
-
-                } else {
-                    return false;
-                }
-
-            } else {
-                return false;
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showConfirmDialog(null, e);
+        if (n > 0 && pst2.executeUpdate() > 0) {
+            logger.info("Cliente insertado correctamente: {}", dts.getCodigo_cliente());
+            return true;
+        } else {
+            logger.warn("No se pudo insertar el cliente: {}", dts.getCodigo_cliente());
             return false;
         }
+
+    } catch (Exception e) {
+        logger.error("Error al insertar cliente: {}", dts.getCodigo_cliente(), e);
+        return false;
     }
+}
 
     public boolean editar(vcliente dts) {
         sSQL = "update persona set nombre=?,apaterno=?,amaterno=?,tipo_documento=?,num_documento=?,"
@@ -150,7 +139,7 @@ public class fcliente {
             }
 
         } catch (Exception e) {
-            JOptionPane.showConfirmDialog(null, e);
+        logger.error("Error al editar cliente", e);
             return false;
         }
     }
@@ -187,7 +176,7 @@ public class fcliente {
             }
 
         } catch (Exception e) {
-            JOptionPane.showConfirmDialog(null, e);
+            logger.error("Error al eliminar cliente con ID {}", dts.getIdpersona(), e);
             return false;
         }
     }
