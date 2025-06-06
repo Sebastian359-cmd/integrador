@@ -12,10 +12,8 @@ import Logica.fproducto;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author CARLOS
- */
+
+
 public class frmConsumo extends javax.swing.JInternalFrame {
 public static String idreserva;
 public static String cliente;
