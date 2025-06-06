@@ -29,10 +29,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.view.JasperViewer;
 
-/**
- *
- * @author CARLOS
- */
+
 public class frmPago extends javax.swing.JInternalFrame {
 
     /**
