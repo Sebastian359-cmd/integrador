@@ -12,10 +12,7 @@ import Logica.fproducto;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author CARLOS
- */
+
 public class frmcliente extends javax.swing.JInternalFrame {
 
     /**
